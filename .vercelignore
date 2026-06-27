@@ -1,0 +1,11 @@
+.dart_tool
+build
+ios
+android
+macos
+windows
+linux
+.idea
+*.log
+.DS_Store
+.git
