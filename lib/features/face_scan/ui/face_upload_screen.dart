@@ -7,11 +7,11 @@ import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../logic/face_analyzer.dart';
+import '../logic/web_face_detector.dart';
 import 'face_result_screen.dart';
 
 /// Màn hình upload ảnh để phân tích tướng mạo.
-/// Mobile dùng ML Kit native; web hiện chỉ hướng dẫn upload vì ML Kit package
-/// không cung cấp face detector chạy trực tiếp trong browser.
+/// Mobile dùng ML Kit native; web dùng MediaPipe WASM.
 class FaceUploadScreen extends StatefulWidget {
   const FaceUploadScreen({super.key});
 
@@ -37,11 +37,44 @@ class _FaceUploadScreenState extends State<FaceUploadScreen> {
 
       if (kIsWeb) {
         setState(() {
-          _isAnalyzing = false;
-          _statusText =
-              'Bản web đã nhận ảnh nhưng chưa phân tích trực tiếp trên trình duyệt. '
-              'Hãy dùng app iOS/Android để quét ngay, hoặc đợi bản web-native analyzer.';
+          _isAnalyzing = true;
+          _statusText = 'Đang tải mô hình nhận diện...';
         });
+
+        final ready = await WebFaceDetector.init();
+        if (!ready) {
+          setState(() {
+            _isAnalyzing = false;
+            _statusText = 'Trình duyệt không hỗ trợ nhận diện khuôn mặt qua web.';
+          });
+          return;
+        }
+
+        setState(() { _statusText = 'Đang phân tích ngũ quan...'; });
+
+        final bytes = await image.readAsBytes();
+        final result = await WebFaceDetector.detect(
+          imageBytes: bytes,
+          mimeType: image.mimeType ?? 'image/jpeg',
+        );
+
+        if (result == null) {
+          setState(() {
+            _isAnalyzing = false;
+            _statusText = 'Không nhận diện được khuôn mặt trong ảnh.\nVui lòng chọn ảnh chụp thẳng mặt, rõ nét.';
+          });
+          return;
+        }
+
+        final faceData = WebFaceDetector.toFaceData(result);
+        final results = FaceAnalyzer.analyzeFullFaceFromData(faceData);
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => FaceResultScreen(results: results)),
+          );
+        }
         return;
       }
 
@@ -50,7 +83,6 @@ class _FaceUploadScreenState extends State<FaceUploadScreen> {
         _statusText = 'Đang phân tích ngũ quan...';
       });
 
-      // Phân tích ảnh
       await _analyzeImage(image.path);
     } catch (e) {
       setState(() {
