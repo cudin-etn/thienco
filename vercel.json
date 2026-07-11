@@ -1,7 +1,7 @@
 {
   "buildCommand": "flutter/bin/flutter build web --release",
   "outputDirectory": "build/web",
-  "installCommand": "if cd flutter; then git pull && cd .. ; else git clone https://github.com/flutter/flutter.git; fi && flutter/bin/flutter doctor && flutter/bin/flutter config --enable-web",
+  "installCommand": "if [ -d flutter ]; then git -C flutter pull; else git clone -b stable --depth 1 https://github.com/flutter/flutter.git; fi && flutter/bin/flutter config --enable-web",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
