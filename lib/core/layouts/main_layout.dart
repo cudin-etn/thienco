@@ -69,7 +69,6 @@ class _MainLayoutState extends State<MainLayout> {
           margin: const EdgeInsets.symmetric(horizontal: 18),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
-            color: AppColors.glassFill(isDark),
             borderRadius: BorderRadius.circular(30),
             border: Border.all(color: AppColors.glassBorder(isDark), width: 1),
           ),
