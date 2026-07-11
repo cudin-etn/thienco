@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'
     show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import 'face_camera_screen.dart';
@@ -22,9 +23,9 @@ class FaceScanScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
+      body: AppBackground(
+   isDark: isDark,
+   child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 32),
             child: Column(

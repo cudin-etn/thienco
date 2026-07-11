@@ -8,6 +8,7 @@ import 'la_so_screen.dart';
 import '../../../core/models/user_profile.dart';
 import '../../../core/database/hive_service.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 
 class TuViScreen extends StatefulWidget {
   const TuViScreen({super.key});
@@ -376,9 +377,9 @@ class _TuViScreenState extends State<TuViScreen> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
+      body: AppBackground(
+   isDark: isDark,
+   child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 32),
             child: Column(

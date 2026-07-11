@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 
 import '../../../core/models/user_profile.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../../../core/database/settings_service.dart';
 import '../../../shared/utils/pdf_helper.dart';
 import '../../../shared/utils/share_helper.dart';
@@ -104,8 +105,8 @@ class _LaSoScreenState extends State<LaSoScreen>
     if (!_isReady) {
       return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Container(
-          decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
+        body: AppBackground(
+          isDark: isDark,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -219,8 +220,8 @@ class _LaSoScreenState extends State<LaSoScreen>
             ],
           ),
         ),
-        body: Container(
-          decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
+        body: AppBackground(
+          isDark: isDark,
           child: SafeArea(
             top: false,
             child: Padding(
@@ -601,81 +602,81 @@ class _LaSoScreenState extends State<LaSoScreen>
                                   key: const ValueKey('expanded-header'),
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                     Row(
-                                       children: [
-                                         Container(
-                                           width: 42,
-                                           height: 42,
-                                           decoration: BoxDecoration(
-                                             color: AppColors.primary.withValues(
-                                               alpha: 0.14,
-                                             ),
-                                             borderRadius: BorderRadius.circular(
-                                               14,
-                                             ),
-                                           ),
-                                           child: const Icon(
-                                             Icons.auto_stories_rounded,
-                                             color: AppColors.primary,
-                                           ),
-                                         ),
-                                         const SizedBox(width: 12),
-                                         Expanded(
-                                           child: Column(
-                                             crossAxisAlignment:
-                                                 CrossAxisAlignment.start,
-                                             children: [
-                                               Text(
-                                                 'Thiên Cơ Toàn Thư',
-                                                 style: TextStyle(
-                                                   fontSize: 22,
-                                                   fontWeight: FontWeight.bold,
-                                                   color: isDarkPopup
-                                                       ? AppColors.darkText
-                                                       : AppColors.lightText,
-                                                 ),
-                                               ),
-                                               const SizedBox(height: 4),
-                                               Text(
-                                                 'Khai giải chuyên sâu theo lá số đã lập',
-                                                 style: TextStyle(
-                                                   fontSize: 13,
-                                                   color: isDarkPopup
-                                                       ? Colors.white70
-                                                       : AppColors
-                                                             .lightSubtleText,
-                                                 ),
-                                               ),
-                                             ],
-                                           ),
-                                         ),
-                                         IconButton(
-                                           icon: Icon(
-                                             Icons.share_rounded,
-                                             color: isDarkPopup
-                                                 ? Colors.white60
-                                                 : AppColors.lightSubtleText,
-                                             size: 22,
-                                           ),
-                                           tooltip: 'Chia sẻ kết quả',
-                                            onPressed: () => _shareTuViResult(
-                                              context,
-                                              hoTen,
-                                              gioiTinh,
-                                              tb,
-                                              mC,
-                                              birthYear,
-                                              tuoiMu,
-                                              ngayAm,
-                                              cungMenh,
-                                              cungThan,
-                                              menhCuc,
-                                              canChiNam,
-                                              segments,
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 42,
+                                          height: 42,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary.withValues(
+                                              alpha: 0.14,
                                             ),
-                                         ),
-                                       ],
-                                     ),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.auto_stories_rounded,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Thiên Cơ Toàn Thư',
+                                                style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isDarkPopup
+                                                      ? AppColors.darkText
+                                                      : AppColors.lightText,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'Khai giải chuyên sâu theo lá số đã lập',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: isDarkPopup
+                                                      ? Colors.white70
+                                                      : AppColors
+                                                            .lightSubtleText,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.share_rounded,
+                                            color: isDarkPopup
+                                                ? Colors.white60
+                                                : AppColors.lightSubtleText,
+                                            size: 22,
+                                          ),
+                                          tooltip: 'Chia sẻ kết quả',
+                                          onPressed: () => _shareTuViResult(
+                                            context,
+                                            hoTen,
+                                            gioiTinh,
+                                            tb,
+                                            mC,
+                                            birthYear,
+                                            tuoiMu,
+                                            ngayAm,
+                                            cungMenh,
+                                            cungThan,
+                                            menhCuc,
+                                            canChiNam,
+                                            segments,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     const SizedBox(height: 16),
                                     Wrap(
                                       spacing: 8,
@@ -730,11 +731,8 @@ class _LaSoScreenState extends State<LaSoScreen>
                         activeSectionIndex: activeSectionIndex,
                         selectedDaiHan: selectedDaiHan,
                         findSectionIndex: findSectionIndex,
-                        onJumpQuick: (targetIndex) => jumpToSection(
-                          targetIndex,
-                          ctrl,
-                          setSheetState,
-                        ),
+                        onJumpQuick: (targetIndex) =>
+                            jumpToSection(targetIndex, ctrl, setSheetState),
                         onSelectDaiHan: (entry) =>
                             selectDaiHan(entry, ctrl, setSheetState),
                       ),
@@ -754,7 +752,7 @@ class _LaSoScreenState extends State<LaSoScreen>
                           child: SingleChildScrollView(
                             controller: ctrl,
                             padding: const EdgeInsets.only(bottom: 28),
-                          child: Column(
+                            child: Column(
                               children: List.generate(segments.length, (idx) {
                                 final item = segments[idx];
                                 final String title = (item['title'] ?? '')
@@ -934,13 +932,13 @@ class _LaSoScreenState extends State<LaSoScreen>
                                                 child: Icon(
                                                   isExpanded
                                                       ? Icons
-                                                          .keyboard_arrow_up_rounded
+                                                            .keyboard_arrow_up_rounded
                                                       : Icons
-                                                          .keyboard_arrow_down_rounded,
+                                                            .keyboard_arrow_down_rounded,
                                                   color: isDarkPopup
                                                       ? Colors.white60
                                                       : AppColors
-                                                          .lightSubtleText,
+                                                            .lightSubtleText,
                                                   size: 18,
                                                 ),
                                               ),
@@ -959,56 +957,55 @@ class _LaSoScreenState extends State<LaSoScreen>
                                             14,
                                           ),
                                           child: Column(
-                                            children:
-                                                List.generate(keyPoints.length, (
-                                                  ki,
-                                                ) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          bottom: 8,
-                                                        ),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(top: 4),
-                                                          width: 7,
-                                                          height: 7,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: AppColors
-                                                                .primary,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 10),
-                                                        Expanded(
-                                                          child: Text(
-                                                            keyPoints[ki],
-                                                            style: TextStyle(
-                                                              color: isDarkPopup
-                                                                  ? Colors
-                                                                      .white
-                                                                  : AppColors
-                                                                      .lightText,
-                                                              fontSize: 13.5,
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              height: 1.45,
+                                            children: List.generate(
+                                              keyPoints.length,
+                                              (ki) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        bottom: 8,
+                                                      ),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        margin:
+                                                            const EdgeInsets.only(
+                                                              top: 4,
                                                             ),
+                                                        width: 7,
+                                                        height: 7,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              color: AppColors
+                                                                  .primary,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Text(
+                                                          keyPoints[ki],
+                                                          style: TextStyle(
+                                                            color: isDarkPopup
+                                                                ? Colors.white
+                                                                : AppColors
+                                                                      .lightText,
+                                                            fontSize: 13.5,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            height: 1.45,
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                }),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
 
@@ -1102,8 +1099,7 @@ class _LaSoScreenState extends State<LaSoScreen>
     String canChiNam,
     List<Map<String, dynamic>> segments,
   ) {
-    final menhChinhTinh =
-        (mC[cungMenh] as List?)?.join(', ') ?? '--';
+    final menhChinhTinh = (mC[cungMenh] as List?)?.join(', ') ?? '--';
 
     if (kIsWeb) {
       final overlay = OverlayEntry(
@@ -1252,9 +1248,7 @@ class _LaSoScreenState extends State<LaSoScreen>
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: isDark ? 0.08 : 0.05),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1489,11 +1483,12 @@ class _BinhGiaiNavBarState extends State<_BinhGiaiNavBar> {
 
   List<MapEntry<String, int>> _computeDaiHan(dynamic raw) {
     if (raw is! Map) return [];
-    final items = raw.entries
-        .where((e) => e.value is int && (e.value as int) <= 90)
-        .map((e) => MapEntry(e.key.toString(), e.value as int))
-        .toList()
-      ..sort((a, b) => a.value.compareTo(b.value));
+    final items =
+        raw.entries
+            .where((e) => e.value is int && (e.value as int) <= 90)
+            .map((e) => MapEntry(e.key.toString(), e.value as int))
+            .toList()
+          ..sort((a, b) => a.value.compareTo(b.value));
     return items;
   }
 
@@ -1560,7 +1555,8 @@ class _BinhGiaiNavBarState extends State<_BinhGiaiNavBar> {
                 final item = widget.quickSections[i];
                 final matches = (item['match'] as List).cast<String>();
                 final targetIndex = widget.findSectionIndex(matches);
-                final isActive = widget.activeSectionIndex != null &&
+                final isActive =
+                    widget.activeSectionIndex != null &&
                     targetIndex != -1 &&
                     widget.activeSectionIndex == targetIndex;
                 return Center(

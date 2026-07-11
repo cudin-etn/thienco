@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../logic/can_chi_calculator.dart';
 import 'widgets/lunar_date_card.dart';
 import '../../settings/ui/settings_drawer.dart';
@@ -80,9 +81,9 @@ class _CanChiScreenState extends State<CanChiScreen> {
       key: _scaffoldKey,
       endDrawer: const SettingsDrawer(),
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
+      body: AppBackground(
+   isDark: isDark,
+   child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
             child: Column(

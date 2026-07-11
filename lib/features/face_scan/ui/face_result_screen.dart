@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../../../shared/utils/pdf_helper.dart';
 import '../../../shared/utils/share_helper.dart';
 import '../../../shared/widgets/tuong_so_share_card.dart';
@@ -130,9 +131,9 @@ class _FaceResultScreenState extends State<FaceResultScreen> {
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
+      body: AppBackground(
+   isDark: isDark,
+   child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
             child: Column(

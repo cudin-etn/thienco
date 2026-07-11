@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../../../core/database/settings_service.dart';
 import '../../../core/database/hive_service.dart';
 import '../../../core/models/user_profile.dart';
@@ -76,9 +77,9 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
+      body: AppBackground(
+   isDark: isDark,
+   child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 40),
             children: [
