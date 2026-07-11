@@ -65,9 +65,9 @@ class _MainLayoutState extends State<MainLayout> {
     ),
       ),
     bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 12, left: 48, right: 48),
+        margin: const EdgeInsets.only(bottom: 12),
         height: 64,
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
           color: isDark
               ? const Color(0xFF1E293B)
