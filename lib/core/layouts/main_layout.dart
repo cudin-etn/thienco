@@ -37,7 +37,11 @@ class _MainLayoutState extends State<MainLayout> {
       extendBody: true,
       body: Container(
         decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: AnimatedSwitcher(
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 92),
+            child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
@@ -58,29 +62,28 @@ class _MainLayoutState extends State<MainLayout> {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        minimum: const EdgeInsets.only(bottom: 12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48),
-          child: Container(
-            height: 64,
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            decoration: BoxDecoration(
+    ),
+      ),
+    bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(bottom: 12, left: 48, right: 48),
+        height: 64,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF1E293B)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
               color: isDark
-                  ? const Color(0xFF1E293B)
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark
-                      ? Colors.black.withValues(alpha: 0.3)
-                      : Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+                  ? Colors.black.withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.06),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
             ),
-            child: Row(
+          ],
+        ),
+        child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                     Expanded(
@@ -131,8 +134,6 @@ class _MainLayoutState extends State<MainLayout> {
                   ],
                 ),
               ),
-        ),
-      ),
     );
   }
 
