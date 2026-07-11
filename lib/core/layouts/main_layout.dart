@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
@@ -17,6 +16,7 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout> {
   int _currentIndex = 0;
+  int? _hoveredIndex;
 
   final List<Widget> _screens = const [
     CanChiScreen(),
@@ -59,29 +59,30 @@ class _MainLayoutState extends State<MainLayout> {
         ),
       ),
       bottomNavigationBar: SafeArea(
-        minimum: const EdgeInsets.only(bottom: 26),
+        minimum: const EdgeInsets.only(bottom: 12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-              child: Container(
-                height: 80,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
+          padding: const EdgeInsets.symmetric(horizontal: 48),
+          child: Container(
+            height: 64,
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? const Color(0xFF1E293B)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
                 ),
-                decoration: BoxDecoration(
-                  color: AppColors.glassFill(isDark),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: AppColors.glassBorder(isDark),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
                     Expanded(
                       child: _buildNavItem(
                         index: 0,
@@ -130,8 +131,6 @@ class _MainLayoutState extends State<MainLayout> {
                   ],
                 ),
               ),
-            ),
-          ),
         ),
       ),
     );
@@ -145,63 +144,62 @@ class _MainLayoutState extends State<MainLayout> {
     required bool isDark,
   }) {
     final bool isSelected = _currentIndex == index;
+    final bool isHovered = _hoveredIndex == index;
     final Color unselectedColor = isDark
-        ? Colors.white54
+        ? Colors.white38
         : AppColors.lightSubtleText;
 
-    return GestureDetector(
-      onTap: () => setState(() => _currentIndex = index),
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-        height: double.infinity,
-        alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? (isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : AppColors.lightSurfaceSoft)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hoveredIndex = index),
+      onExit: (_) => setState(() => _hoveredIndex = null),
+      child: GestureDetector(
+        onTap: () => setState(() => _currentIndex = index),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
             color: isSelected
                 ? (isDark
                       ? Colors.white.withValues(alpha: 0.10)
-                      : AppColors.lightBorderSoft)
-                : Colors.transparent,
-            width: 1,
+                      : AppColors.primary.withValues(alpha: 0.10))
+                : (isHovered
+                      ? (isDark
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : Colors.black.withValues(alpha: 0.03))
+                      : Colors.transparent),
+            borderRadius: BorderRadius.circular(20),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedScale(
-              duration: const Duration(milliseconds: 220),
-              scale: isSelected ? 1.04 : 1,
-              child: Icon(
-                isSelected ? activeIcon : icon,
-                color: isSelected ? AppColors.primary : unselectedColor,
-                size: isSelected ? 24 : 23,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedScale(
+                duration: const Duration(milliseconds: 250),
+                scale: isSelected ? 1.05 : (isHovered ? 1.03 : 1),
+                child: Icon(
+                  isSelected ? activeIcon : icon,
+                  color: isSelected ? AppColors.primary : unselectedColor,
+                  size: 22,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOutCubic,
-              style: TextStyle(
-                color: isSelected ? AppColors.primary : unselectedColor,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                fontSize: isSelected ? 11.8 : 11.6,
-                letterSpacing: 0.06,
-                height: 1,
+              const SizedBox(height: 3),
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
+                style: TextStyle(
+                  color: isSelected ? AppColors.primary : (isHovered ? (isDark ? Colors.white70 : Colors.black54) : unselectedColor),
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 10.5,
+                  letterSpacing: 0.05,
+                  height: 1,
+                ),
+                child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
               ),
-              child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
