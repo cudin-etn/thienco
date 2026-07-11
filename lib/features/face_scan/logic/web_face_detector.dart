@@ -13,10 +13,21 @@ class WebFaceDetector {
 
   static Future<bool> init() async {
     if (_initialized) return true;
-    if (_initStarted) return false;
+    if (_initStarted) {
+      for (int i = 0; i < 40 && !_initialized; i++) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+      return _initialized;
+    }
     _initStarted = true;
-    _initialized = await webInit();
-    return _initialized;
+    for (int i = 0; i < 40; i++) {
+      if (await webInit()) {
+        _initialized = true;
+        return true;
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    return false;
   }
 
   static Future<MediaPipeResult?> detect({required Uint8List imageBytes, required String mimeType}) async {
@@ -24,7 +35,7 @@ class WebFaceDetector {
 
     try {
       final dataUrl = 'data:$mimeType;base64,${base64Encode(imageBytes)}';
-      final resultJson = webDetect(dataUrl);
+      final resultJson = await webDetect(dataUrl);
       final decoded = jsonDecode(resultJson) as Map<String, dynamic>;
 
       if (decoded.containsKey('error')) return null;

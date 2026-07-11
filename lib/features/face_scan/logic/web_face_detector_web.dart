@@ -20,11 +20,12 @@ Future<bool> webInit() async {
 
 /// Detect face from a base64 data URL on web.
 /// Returns JSON string with landmarks or error.
-String webDetect(String dataUrl) {
+Future<String> webDetect(String dataUrl) async {
   try {
     final fn = _mediapipeDetect;
     if (fn == null) return '{"error":"not ready"}';
-    return (fn.callAsFunction(null, dataUrl.toJS) as JSString).toDart;
+    final result = await (fn.callAsFunction(null, dataUrl.toJS) as JSPromise).toDart;
+    return (result as JSString).toDart;
   } catch (e) {
     return '{"error":"$e"}';
   }

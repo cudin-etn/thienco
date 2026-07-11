@@ -722,51 +722,107 @@ class _LaSoScreenState extends State<LaSoScreen>
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.fromLTRB(12, 11, 12, 10),
-                        decoration: BoxDecoration(
-                          color: isDarkPopup
-                              ? Colors.white.withValues(alpha: 0.035)
-                              : AppColors.lightSurface.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(22),
-                          border: Border.all(
-                            color: isDarkPopup
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : AppColors.lightBorder,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 220),
+                        crossFadeState: isCollapsed
+                            ? CrossFadeState.showSecond
+                            : CrossFadeState.showFirst,
+                        firstChild: Column(
                           children: [
-                            Text(
-                              'Cửa Vào Luận Giải',
-                              style: TextStyle(
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(12, 11, 12, 10),
+                              decoration: BoxDecoration(
                                 color: isDarkPopup
-                                    ? AppColors.darkText
-                                    : AppColors.lightText,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 14.5,
+                                    ? Colors.white.withValues(alpha: 0.035)
+                                    : AppColors.lightSurface
+                                        .withValues(alpha: 0.92),
+                                borderRadius: BorderRadius.circular(22),
+                                border: Border.all(
+                                  color: isDarkPopup
+                                      ? Colors.white.withValues(alpha: 0.08)
+                                      : AppColors.lightBorder,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Cửa Vào Luận Giải',
+                                    style: TextStyle(
+                                      color: isDarkPopup
+                                          ? AppColors.darkText
+                                          : AppColors.lightText,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 9),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: List.generate(
+                                      quickSections.length,
+                                      (quickIdx) {
+                                        final item = quickSections[quickIdx];
+                                        final matches = (item['match'] as List)
+                                            .cast<String>();
+                                        final targetIndex =
+                                            findSectionIndex(matches);
+                                        final bool isActive =
+                                            activeSectionIndex != null &&
+                                            targetIndex != -1 &&
+                                            activeSectionIndex == targetIndex;
+
+                                        return _buildActionChip(
+                                          isDarkPopup,
+                                          label: item['label'] as String,
+                                          isActive: isActive,
+                                          onTap: () async {
+                                            await jumpToSection(
+                                              targetIndex,
+                                              ctrl,
+                                              setSheetState,
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 9),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: List.generate(quickSections.length, (
-                                quickIdx,
-                              ) {
-                                final item = quickSections[quickIdx];
-                                final matches = (item['match'] as List)
-                                    .cast<String>();
-                                final targetIndex = findSectionIndex(matches);
-                                final bool isActive =
-                                    activeSectionIndex != null &&
-                                    targetIndex != -1 &&
-                                    activeSectionIndex == targetIndex;
-
-                                return _buildActionChip(
+                            _buildDaiHanTimeline(
+                              mD,
+                              tuoiMu,
+                              isDarkPopup,
+                              selectedDaiHan,
+                              (entry) =>
+                                  selectDaiHan(entry, ctrl, setSheetState),
+                            ),
+                          ],
+                        ),
+                        secondChild: Container(
+                          height: 48,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            itemCount: quickSections.length,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 8),
+                            itemBuilder: (context, quickIdx) {
+                              final item = quickSections[quickIdx];
+                              final matches =
+                                  (item['match'] as List).cast<String>();
+                              final targetIndex = findSectionIndex(matches);
+                              final bool isActive =
+                                  activeSectionIndex != null &&
+                                  targetIndex != -1 &&
+                                  activeSectionIndex == targetIndex;
+                              return Center(
+                                child: _buildActionChip(
                                   isDarkPopup,
                                   label: item['label'] as String,
                                   isActive: isActive,
@@ -777,18 +833,11 @@ class _LaSoScreenState extends State<LaSoScreen>
                                       setSheetState,
                                     );
                                   },
-                                );
-                              }),
-                            ),
-                          ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      _buildDaiHanTimeline(
-                        mD,
-                        tuoiMu,
-                        isDarkPopup,
-                        selectedDaiHan,
-                        (entry) => selectDaiHan(entry, ctrl, setSheetState),
                       ),
                       Expanded(
                         child: NotificationListener<ScrollNotification>(
