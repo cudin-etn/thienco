@@ -35,6 +35,14 @@ class ThienCoApp extends StatelessWidget {
         final String themeMode = SettingsService.getThemeMode();
 
         return MaterialApp(
+          builder: (context, child) {
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 820),
+                child: child!,
+              ),
+            );
+          },
           title: 'Thiên Cơ',
           debugShowCheckedModeBanner: false,
           locale: const Locale('vi', 'VN'),

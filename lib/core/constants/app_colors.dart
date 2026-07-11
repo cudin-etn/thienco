@@ -65,21 +65,21 @@ class AppColors {
   static LinearGradient appBackground(bool isDark) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: const [0.0, 0.3, 0.55, 0.8, 1.0],
+    stops: const [0.0, 0.2, 0.5, 0.8, 1.0],
     colors: isDark
         ? const [
-            Color(0xFF0B1020),
+            Color(0xFF050A18),
             Color(0xFF1E1B4B),
-            Color(0xFF0D1B3E),
-            Color(0xFF172554),
-            Color(0xFF0B1020),
+            Color(0xFF0B1A3E),
+            Color(0xFF1A2645),
+            Color(0xFF0A0F1E),
           ]
         : const [
-            Color(0xFFFDF2F8),
-            Color(0xFFF5F3FF),
-            Color(0xFFEFF6FF),
-            Color(0xFFF0FDF4),
-            Color(0xFFFDF4FF),
+            Color(0xFFFCE7F3),
+            Color(0xFFEDE9FE),
+            Color(0xFFDBEAFE),
+            Color(0xFFDCFCE7),
+            Color(0xFFFAF5FF),
           ],
   );
 

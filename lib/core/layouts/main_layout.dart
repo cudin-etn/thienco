@@ -54,7 +54,12 @@ class _MainLayoutState extends State<MainLayout> {
           },
           child: KeyedSubtree(
             key: ValueKey(_currentIndex),
-            child: _screens[_currentIndex],
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 820),
+                child: _screens[_currentIndex],
+              ),
+            ),
           ),
         ),
       ),
