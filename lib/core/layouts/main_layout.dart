@@ -34,106 +34,112 @@ class _MainLayoutState extends State<MainLayout> {
       backgroundColor: isDark
           ? AppColors.darkScaffold
           : AppColors.lightScaffold,
-      extendBody: true,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 92),
-            child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            final slide = Tween<Offset>(
-              begin: const Offset(0.035, 0),
-              end: Offset.zero,
-            ).animate(animation);
-
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(position: slide, child: child),
-            );
-          },
-          child: KeyedSubtree(
-            key: ValueKey(_currentIndex),
-            child: _screens[_currentIndex],
-          ),
-        ),
-      ),
-    ),
-      ),
-    bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        height: 64,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1E293B)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.3)
-                  : Colors.black.withValues(alpha: 0.06),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 0,
-                        icon: Icons.calendar_today_outlined,
-                        activeIcon: Icons.calendar_month_rounded,
-                        label: 'Hôm Nay',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 1,
-                        icon: Icons.auto_awesome_outlined,
-                        activeIcon: Icons.auto_awesome_rounded,
-                        label: 'Tử Vi',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 2,
-                        icon: Icons.face_retouching_natural_outlined,
-                        activeIcon: Icons.face_retouching_natural_rounded,
-                        label: 'Tướng',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 3,
-                        icon: Icons.favorite_outline_rounded,
-                        activeIcon: Icons.favorite_rounded,
-                        label: 'Hợp Tuổi',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 4,
-                        icon: Icons.badge_outlined,
-                        activeIcon: Icons.badge_rounded,
-                        label: 'Hồ Sơ',
-                        isDark: isDark,
-                      ),
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 92),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    final slide = Tween<Offset>(
+                      begin: const Offset(0.035, 0),
+                      end: Offset.zero,
+                    ).animate(animation);
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(position: slide, child: child),
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey(_currentIndex),
+                    child: _screens[_currentIndex],
+                  ),
                 ),
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 12,
+            left: 48,
+            right: 48,
+            child: Container(
+              height: 64,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF1E293B)
+                    : Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.3)
+                        : Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: _buildNavItem(
+                      index: 0,
+                      icon: Icons.calendar_today_outlined,
+                      activeIcon: Icons.calendar_month_rounded,
+                      label: 'Hôm Nay',
+                      isDark: isDark,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildNavItem(
+                      index: 1,
+                      icon: Icons.auto_awesome_outlined,
+                      activeIcon: Icons.auto_awesome_rounded,
+                      label: 'Tử Vi',
+                      isDark: isDark,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildNavItem(
+                      index: 2,
+                      icon: Icons.face_retouching_natural_outlined,
+                      activeIcon: Icons.face_retouching_natural_rounded,
+                      label: 'Tướng',
+                      isDark: isDark,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildNavItem(
+                      index: 3,
+                      icon: Icons.favorite_outline_rounded,
+                      activeIcon: Icons.favorite_rounded,
+                      label: 'Hợp Tuổi',
+                      isDark: isDark,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildNavItem(
+                      index: 4,
+                      icon: Icons.badge_outlined,
+                      activeIcon: Icons.badge_rounded,
+                      label: 'Hồ Sơ',
+                      isDark: isDark,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -191,7 +197,11 @@ class _MainLayoutState extends State<MainLayout> {
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOutCubic,
                 style: TextStyle(
-                  color: isSelected ? AppColors.primary : (isHovered ? (isDark ? Colors.white70 : Colors.black54) : unselectedColor),
+                  color: isSelected
+                      ? AppColors.primary
+                      : (isHovered
+                          ? (isDark ? Colors.white70 : Colors.black54)
+                          : unselectedColor),
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   fontSize: 10.5,
                   letterSpacing: 0.05,
