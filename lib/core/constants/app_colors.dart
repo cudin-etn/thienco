@@ -65,22 +65,9 @@ class AppColors {
   static LinearGradient appBackground(bool isDark) => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: const [0.0, 0.3, 0.55, 0.8, 1.0],
     colors: isDark
-        ? const [
-            Color(0xFF0B1020),
-            Color(0xFF1E1B4B),
-            Color(0xFF0D1B3E),
-            Color(0xFF172554),
-            Color(0xFF0B1020),
-          ]
-        : const [
-            Color(0xFFFDF2F8),
-            Color(0xFFF5F3FF),
-            Color(0xFFEFF6FF),
-            Color(0xFFF0FDF4),
-            Color(0xFFFDF4FF),
-          ],
+        ? const [darkScaffold, darkScaffoldAlt, darkScaffoldAccent]
+        : const [lightScaffold, lightScaffoldAlt, lightScaffoldAccent],
   );
 
   static LinearGradient heroGradient(bool isDark) => LinearGradient(
