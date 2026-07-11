@@ -371,7 +371,6 @@ class _LaSoScreenState extends State<LaSoScreen>
         : DateTime.now().year - birthYear + 1;
 
     bool isCollapsed = true;
-    bool daiHanExpanded = false;
     int? activeSectionIndex;
     MapEntry<String, int>? selectedDaiHan;
     final Map<int, bool> expandedSections = <int, bool>{};
@@ -723,125 +722,21 @@ class _LaSoScreenState extends State<LaSoScreen>
                                 ),
                         ),
                       ),
-                      AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 220),
-                        crossFadeState: isCollapsed
-                            ? CrossFadeState.showSecond
-                            : CrossFadeState.showFirst,
-                        firstChild: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              padding:
-                                  const EdgeInsets.fromLTRB(12, 11, 12, 10),
-                              decoration: BoxDecoration(
-                                color: isDarkPopup
-                                    ? Colors.white.withValues(alpha: 0.035)
-                                    : AppColors.lightSurface
-                                        .withValues(alpha: 0.92),
-                                borderRadius: BorderRadius.circular(22),
-                                border: Border.all(
-                                  color: isDarkPopup
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : AppColors.lightBorder,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Cửa Vào Luận Giải',
-                                    style: TextStyle(
-                                      color: isDarkPopup
-                                          ? AppColors.darkText
-                                          : AppColors.lightText,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 9),
-                                  Wrap(
-                                    spacing: 8,
-                                    runSpacing: 8,
-                                    children: List.generate(
-                                      quickSections.length,
-                                      (quickIdx) {
-                                        final item = quickSections[quickIdx];
-                                        final matches = (item['match'] as List)
-                                            .cast<String>();
-                                        final targetIndex =
-                                            findSectionIndex(matches);
-                                        final bool isActive =
-                                            activeSectionIndex != null &&
-                                            targetIndex != -1 &&
-                                            activeSectionIndex == targetIndex;
-
-                                        return _buildActionChip(
-                                          isDarkPopup,
-                                          label: item['label'] as String,
-                                          isActive: isActive,
-                                          onTap: () async {
-                                            await jumpToSection(
-                                              targetIndex,
-                                              ctrl,
-                                              setSheetState,
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            _buildDaiHanTimeline(
-                              mD,
-                              tuoiMu,
-                              isDarkPopup,
-                              selectedDaiHan,
-                              (entry) =>
-                                  selectDaiHan(entry, ctrl, setSheetState),
-                              collapsed: !daiHanExpanded,
-                              onToggle: () =>
-                                  setSheetState(() => daiHanExpanded = !daiHanExpanded),
-                            ),
-                          ],
+                      _BinhGiaiNavBar(
+                        isDark: isDarkPopup,
+                        quickSections: quickSections,
+                        rawDaiHan: mD,
+                        tuoiMu: tuoiMu,
+                        activeSectionIndex: activeSectionIndex,
+                        selectedDaiHan: selectedDaiHan,
+                        findSectionIndex: findSectionIndex,
+                        onJumpQuick: (targetIndex) => jumpToSection(
+                          targetIndex,
+                          ctrl,
+                          setSheetState,
                         ),
-                        secondChild: Container(
-                          height: 48,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 2),
-                            itemCount: quickSections.length,
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(width: 8),
-                            itemBuilder: (context, quickIdx) {
-                              final item = quickSections[quickIdx];
-                              final matches =
-                                  (item['match'] as List).cast<String>();
-                              final targetIndex = findSectionIndex(matches);
-                              final bool isActive =
-                                  activeSectionIndex != null &&
-                                  targetIndex != -1 &&
-                                  activeSectionIndex == targetIndex;
-                              return Center(
-                                child: _buildActionChip(
-                                  isDarkPopup,
-                                  label: item['label'] as String,
-                                  isActive: isActive,
-                                  onTap: () async {
-                                    await jumpToSection(
-                                      targetIndex,
-                                      ctrl,
-                                      setSheetState,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        onSelectDaiHan: (entry) =>
+                            selectDaiHan(entry, ctrl, setSheetState),
                       ),
                       Expanded(
                         child: NotificationListener<ScrollNotification>(
@@ -1265,134 +1160,12 @@ class _LaSoScreenState extends State<LaSoScreen>
     return year;
   }
 
-  Widget _buildDaiHanTimeline(
-    dynamic rawDaiHan,
-    int tuoiMu,
-    bool isDark,
-    MapEntry<String, int>? selected,
-    ValueChanged<MapEntry<String, int>> onSelected, {
-    bool collapsed = false,
-    VoidCallback? onToggle,
-  }) {
-    if (rawDaiHan is! Map) return const SizedBox.shrink();
-
-    final items =
-        rawDaiHan.entries
-            .where((entry) => entry.value is int && (entry.value as int) <= 90)
-            .map((entry) => MapEntry(entry.key.toString(), entry.value as int))
-            .toList()
-          ..sort((a, b) => a.value.compareTo(b.value));
-
-    if (items.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.fromLTRB(12, 11, 12, 12),
-      decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.035)
-            : AppColors.lightSurface.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : AppColors.lightBorder,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: onToggle,
-            behavior: HitTestBehavior.opaque,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Đại Hạn Theo Tuổi',
-                    style: TextStyle(
-                      color: isDark ? AppColors.darkText : AppColors.lightText,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14.5,
-                    ),
-                  ),
-                ),
-                if (tuoiMu > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: _buildCompactMetaChip(
-                      isDark,
-                      Icons.person_pin_circle_outlined,
-                      'Tuổi mụ $tuoiMu',
-                    ),
-                  ),
-                Icon(
-                  collapsed
-                      ? Icons.keyboard_arrow_down_rounded
-                      : Icons.keyboard_arrow_up_rounded,
-                  size: 20,
-                  color: isDark ? Colors.white60 : AppColors.lightSubtleText,
-                ),
-              ],
-            ),
-          ),
-          if (!collapsed) ...[
-            if (selected != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                'Đang xem đại hạn ${selected.value}-${selected.value + 9} tuổi tại cung ${selected.key}.',
-                style: TextStyle(
-                  color: isDark ? Colors.white60 : AppColors.lightSubtleText,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List.generate(items.length, (index) {
-                final entry = items[index];
-                final start = entry.value;
-                final end = start + 9;
-                final isCurrent = tuoiMu >= start && tuoiMu <= end;
-                final isSelected = selected?.key == entry.key;
-
-                return _buildActionChip(
-                  isDark,
-                  label: '${entry.key} $start-$end',
-                  isActive: isCurrent || isSelected,
-                  icon: isCurrent
-                      ? Icons.my_location_rounded
-                      : Icons.timeline_rounded,
-                  onTap: () => onSelected(entry),
-                );
-              }),
-            ),
-          ] else ...[
-            const SizedBox(height: 6),
-            Text(
-              'Nhấn để xem chi tiết các đại hạn',
-              style: TextStyle(
-                color: isDark ? Colors.white38 : Colors.black38,
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionChip(
+  static Widget _buildActionChip(
     bool isDark, {
     required String label,
     required bool isActive,
-    required VoidCallback onTap,
     IconData? icon,
+    required VoidCallback onTap,
   }) {
     return Material(
       color: Colors.transparent,
@@ -1671,5 +1444,180 @@ class _LaSoScreenState extends State<LaSoScreen>
     }
 
     return TextSpan(children: spans);
+  }
+}
+
+class _BinhGiaiNavBar extends StatefulWidget {
+  final bool isDark;
+  final List<Map<String, dynamic>> quickSections;
+  final dynamic rawDaiHan;
+  final int tuoiMu;
+  final int? activeSectionIndex;
+  final MapEntry<String, int>? selectedDaiHan;
+  final int Function(List<String> matches) findSectionIndex;
+  final void Function(int targetIndex) onJumpQuick;
+  final void Function(MapEntry<String, int>) onSelectDaiHan;
+
+  const _BinhGiaiNavBar({
+    required this.isDark,
+    required this.quickSections,
+    required this.rawDaiHan,
+    required this.tuoiMu,
+    required this.activeSectionIndex,
+    required this.selectedDaiHan,
+    required this.findSectionIndex,
+    required this.onJumpQuick,
+    required this.onSelectDaiHan,
+  });
+
+  @override
+  State<_BinhGiaiNavBar> createState() => _BinhGiaiNavBarState();
+}
+
+class _BinhGiaiNavBarState extends State<_BinhGiaiNavBar> {
+  late final List<MapEntry<String, int>> _daiHanItems;
+  late final List<GlobalKey> _dhKeys;
+  final ScrollController _dhScroll = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _daiHanItems = _computeDaiHan(widget.rawDaiHan);
+    _dhKeys = List.generate(_daiHanItems.length, (_) => GlobalKey());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCurrent());
+  }
+
+  List<MapEntry<String, int>> _computeDaiHan(dynamic raw) {
+    if (raw is! Map) return [];
+    final items = raw.entries
+        .where((e) => e.value is int && (e.value as int) <= 90)
+        .map((e) => MapEntry(e.key.toString(), e.value as int))
+        .toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+    return items;
+  }
+
+  void _scrollToCurrent() {
+    if (!_dhScroll.hasClients) return;
+    final idx = _daiHanItems.indexWhere(
+      (e) => widget.tuoiMu >= e.value && widget.tuoiMu <= e.value + 9,
+    );
+    if (idx < 0) return;
+    final ctx = _dhKeys[idx].currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        alignment: 0.5,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _dhScroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = widget.isDark;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.035)
+            : AppColors.lightSurface.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : AppColors.lightBorder,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Mục lục nhanh',
+            style: TextStyle(
+              color: isDark ? AppColors.darkText : AppColors.lightText,
+              fontWeight: FontWeight.w800,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 36,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              itemCount: widget.quickSections.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, i) {
+                final item = widget.quickSections[i];
+                final matches = (item['match'] as List).cast<String>();
+                final targetIndex = widget.findSectionIndex(matches);
+                final isActive = widget.activeSectionIndex != null &&
+                    targetIndex != -1 &&
+                    widget.activeSectionIndex == targetIndex;
+                return Center(
+                  child: _LaSoScreenState._buildActionChip(
+                    isDark,
+                    label: item['label'] as String,
+                    isActive: isActive,
+                    onTap: () => widget.onJumpQuick(targetIndex),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (_daiHanItems.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              'Đại hạn theo tuổi',
+              style: TextStyle(
+                color: isDark ? AppColors.darkText : AppColors.lightText,
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 36,
+              child: ListView.separated(
+                controller: _dhScroll,
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                itemCount: _daiHanItems.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, i) {
+                  final entry = _daiHanItems[i];
+                  final start = entry.value;
+                  final end = start + 9;
+                  final isCurrent =
+                      widget.tuoiMu >= start && widget.tuoiMu <= end;
+                  final isSelected = widget.selectedDaiHan?.key == entry.key;
+                  return Container(
+                    key: _dhKeys[i],
+                    child: _LaSoScreenState._buildActionChip(
+                      isDark,
+                      label: '${entry.key} $start-$end',
+                      isActive: isCurrent || isSelected,
+                      icon: isCurrent
+                          ? Icons.my_location_rounded
+                          : Icons.timeline_rounded,
+                      onTap: () => widget.onSelectDaiHan(entry),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
