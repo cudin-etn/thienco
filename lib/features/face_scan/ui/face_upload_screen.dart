@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../shared/widgets/app_background.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../logic/face_analyzer.dart';
@@ -162,9 +161,9 @@ class _FaceUploadScreenState extends State<FaceUploadScreen> {
           ),
         ),
       ),
-      body: AppBackground(
-   isDark: isDark,
-   child: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
+        child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../shared/widgets/app_background.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/gradient_button.dart';
 import '../logic/hop_tuoi_calculator.dart';
@@ -78,9 +77,9 @@ class _HopTuoiScreenState extends State<HopTuoiScreen> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: AppBackground(
-   isDark: isDark,
-   child: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
+        child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 32),
             child: Column(
