@@ -96,6 +96,8 @@ class _TuViScreenState extends State<TuViScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: false,
       backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
@@ -147,58 +149,54 @@ class _TuViScreenState extends State<TuViScreen> {
                   final bool isSelected =
                       _timeController.text == 'Giờ ${item['chi']}';
 
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
-                      onTap: () {
-                        setState(() {
-                          _timeController.text = 'Giờ ${item['chi']}';
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _timeController.text = 'Giờ ${item['chi']}';
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: isSelected
+                            ? AppColors.primary.withValues(
+                                alpha: isDark ? 0.25 : 0.12,
+                              )
+                            : (isDark
+                                  ? Colors.white.withValues(alpha: 0.05)
+                                  : Colors.grey.withValues(alpha: 0.08)),
+                        border: Border.all(
                           color: isSelected
-                              ? AppColors.primary.withValues(
-                                  alpha: isDark ? 0.25 : 0.12,
-                                )
+                              ? AppColors.primary.withValues(alpha: 0.5)
                               : (isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.grey.withValues(alpha: 0.08)),
-                          border: Border.all(
-                            color: isSelected
-                                ? AppColors.primary.withValues(alpha: 0.5)
-                                : (isDark
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.black12),
+                                    ? Colors.white.withValues(alpha: 0.08)
+                                    : Colors.black12),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Giờ ${item['chi']}',
+                            style: TextStyle(
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : (isDark ? Colors.white : Colors.black87),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Giờ ${item['chi']}',
-                              style: TextStyle(
-                                color: isSelected
-                                    ? AppColors.primary
-                                    : (isDark ? Colors.white : Colors.black87),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                              ),
+                          const SizedBox(height: 2),
+                          Text(
+                            item['range']!,
+                            style: TextStyle(
+                              color: isDark ? Colors.white54 : Colors.black45,
+                              fontSize: 11,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              item['range']!,
-                              style: TextStyle(
-                                color: isDark ? Colors.white54 : Colors.black45,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -227,6 +225,8 @@ class _TuViScreenState extends State<TuViScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      enableDrag: false,
       backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),

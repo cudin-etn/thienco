@@ -370,7 +370,8 @@ class _LaSoScreenState extends State<LaSoScreen>
         ? 0
         : DateTime.now().year - birthYear + 1;
 
-    bool isCollapsed = false;
+    bool isCollapsed = true;
+    bool daiHanExpanded = false;
     int? activeSectionIndex;
     MapEntry<String, int>? selectedDaiHan;
     final Map<int, bool> expandedSections = <int, bool>{};
@@ -800,6 +801,9 @@ class _LaSoScreenState extends State<LaSoScreen>
                               selectedDaiHan,
                               (entry) =>
                                   selectDaiHan(entry, ctrl, setSheetState),
+                              collapsed: !daiHanExpanded,
+                              onToggle: () =>
+                                  setSheetState(() => daiHanExpanded = !daiHanExpanded),
                             ),
                           ],
                         ),
@@ -1266,8 +1270,10 @@ class _LaSoScreenState extends State<LaSoScreen>
     int tuoiMu,
     bool isDark,
     MapEntry<String, int>? selected,
-    ValueChanged<MapEntry<String, int>> onSelected,
-  ) {
+    ValueChanged<MapEntry<String, int>> onSelected, {
+    bool collapsed = false,
+    VoidCallback? onToggle,
+  }) {
     if (rawDaiHan is! Map) return const SizedBox.shrink();
 
     final items =
@@ -1297,59 +1303,85 @@ class _LaSoScreenState extends State<LaSoScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Đại Hạn Theo Tuổi',
-                  style: TextStyle(
-                    color: isDark ? AppColors.darkText : AppColors.lightText,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14.5,
+          GestureDetector(
+            onTap: onToggle,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Đại Hạn Theo Tuổi',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkText : AppColors.lightText,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14.5,
+                    ),
                   ),
                 ),
-              ),
-              if (tuoiMu > 0)
-                _buildCompactMetaChip(
-                  isDark,
-                  Icons.person_pin_circle_outlined,
-                  'Tuổi mụ $tuoiMu',
+                if (tuoiMu > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: _buildCompactMetaChip(
+                      isDark,
+                      Icons.person_pin_circle_outlined,
+                      'Tuổi mụ $tuoiMu',
+                    ),
+                  ),
+                Icon(
+                  collapsed
+                      ? Icons.keyboard_arrow_down_rounded
+                      : Icons.keyboard_arrow_up_rounded,
+                  size: 20,
+                  color: isDark ? Colors.white60 : AppColors.lightSubtleText,
                 ),
-            ],
+              ],
+            ),
           ),
-          if (selected != null) ...[
+          if (!collapsed) ...[
+            if (selected != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                'Đang xem đại hạn ${selected.value}-${selected.value + 9} tuổi tại cung ${selected.key}.',
+                style: TextStyle(
+                  color: isDark ? Colors.white60 : AppColors.lightSubtleText,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: List.generate(items.length, (index) {
+                final entry = items[index];
+                final start = entry.value;
+                final end = start + 9;
+                final isCurrent = tuoiMu >= start && tuoiMu <= end;
+                final isSelected = selected?.key == entry.key;
+
+                return _buildActionChip(
+                  isDark,
+                  label: '${entry.key} $start-$end',
+                  isActive: isCurrent || isSelected,
+                  icon: isCurrent
+                      ? Icons.my_location_rounded
+                      : Icons.timeline_rounded,
+                  onTap: () => onSelected(entry),
+                );
+              }),
+            ),
+          ] else ...[
             const SizedBox(height: 6),
             Text(
-              'Đang xem đại hạn ${selected.value}-${selected.value + 9} tuổi tại cung ${selected.key}.',
+              'Nhấn để xem chi tiết các đại hạn',
               style: TextStyle(
-                color: isDark ? Colors.white60 : AppColors.lightSubtleText,
+                color: isDark ? Colors.white38 : Colors.black38,
                 fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ],
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: List.generate(items.length, (index) {
-              final entry = items[index];
-              final start = entry.value;
-              final end = start + 9;
-              final isCurrent = tuoiMu >= start && tuoiMu <= end;
-              final isSelected = selected?.key == entry.key;
-
-              return _buildActionChip(
-                isDark,
-                label: '${entry.key} $start-$end',
-                isActive: isCurrent || isSelected,
-                icon: isCurrent
-                    ? Icons.my_location_rounded
-                    : Icons.timeline_rounded,
-                onTap: () => onSelected(entry),
-              );
-            }),
-          ),
         ],
       ),
     );

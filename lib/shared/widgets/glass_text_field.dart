@@ -34,6 +34,7 @@ class GlassTextField extends StatelessWidget {
         controller: controller,
         keyboardType: keyboardType,
         readOnly: readOnly,
+        enableInteractiveSelection: !readOnly,
         onTap: onTap,
         style: TextStyle(
           color: isDark ? AppColors.darkText : AppColors.lightText,
