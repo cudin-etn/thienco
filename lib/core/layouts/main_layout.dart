@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
@@ -65,77 +64,63 @@ class _MainLayoutState extends State<MainLayout> {
       ),
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.only(bottom: 26),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: ClipRRect(
+        child: Container(
+          height: 80,
+          margin: const EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.glassFill(isDark),
             borderRadius: BorderRadius.circular(30),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-              child: Container(
-                height: 80,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.glassFill(isDark),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: AppColors.glassBorder(isDark),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 0,
-                        icon: Icons.calendar_today_outlined,
-                        activeIcon: Icons.calendar_month_rounded,
-                        label: 'Hôm Nay',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 1,
-                        icon: Icons.auto_awesome_outlined,
-                        activeIcon: Icons.auto_awesome_rounded,
-                        label: 'Tử Vi',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 2,
-                        icon: Icons.face_retouching_natural_outlined,
-                        activeIcon: Icons.face_retouching_natural_rounded,
-                        label: 'Tướng',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 3,
-                        icon: Icons.favorite_outline_rounded,
-                        activeIcon: Icons.favorite_rounded,
-                        label: 'Hợp Tuổi',
-                        isDark: isDark,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildNavItem(
-                        index: 4,
-                        icon: Icons.badge_outlined,
-                        activeIcon: Icons.badge_rounded,
-                        label: 'Hồ Sơ',
-                        isDark: isDark,
-                      ),
-                    ),
-                  ],
+            border: Border.all(color: AppColors.glassBorder(isDark), width: 1),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildNavItem(
+                  index: 0,
+                  icon: Icons.calendar_today_outlined,
+                  activeIcon: Icons.calendar_month_rounded,
+                  label: 'Hôm Nay',
+                  isDark: isDark,
                 ),
               ),
-            ),
+              Expanded(
+                child: _buildNavItem(
+                  index: 1,
+                  icon: Icons.auto_awesome_outlined,
+                  activeIcon: Icons.auto_awesome_rounded,
+                  label: 'Tử Vi',
+                  isDark: isDark,
+                ),
+              ),
+              Expanded(
+                child: _buildNavItem(
+                  index: 2,
+                  icon: Icons.face_retouching_natural_outlined,
+                  activeIcon: Icons.face_retouching_natural_rounded,
+                  label: 'Tướng',
+                  isDark: isDark,
+                ),
+              ),
+              Expanded(
+                child: _buildNavItem(
+                  index: 3,
+                  icon: Icons.favorite_outline_rounded,
+                  activeIcon: Icons.favorite_rounded,
+                  label: 'Hợp Tuổi',
+                  isDark: isDark,
+                ),
+              ),
+              Expanded(
+                child: _buildNavItem(
+                  index: 4,
+                  icon: Icons.badge_outlined,
+                  activeIcon: Icons.badge_rounded,
+                  label: 'Hồ Sơ',
+                  isDark: isDark,
+                ),
+              ),
+            ],
           ),
         ),
       ),
