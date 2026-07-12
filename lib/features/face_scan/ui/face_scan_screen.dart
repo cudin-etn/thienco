@@ -22,10 +22,8 @@ class FaceScanScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
-          child: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,7 +336,6 @@ class FaceScanScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 

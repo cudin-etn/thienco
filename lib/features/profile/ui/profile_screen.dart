@@ -12,9 +12,7 @@ class ProfileScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? const Color(0xFF0F172A)
-          : const Color(0xFFF3F4F6),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text(
           'Danh Sách Lá Số',
@@ -27,21 +25,11 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [const Color(0xFF0F172A), const Color(0xFF1E1B4B)]
-                : [const Color(0xFFF3F4F6), const Color(0xFFE5E7EB)],
-          ),
-        ),
-        child: ValueListenableBuilder(
-          valueListenable: Hive.box<UserProfile>(
-            HiveService.profileBoxName,
-          ).listenable(),
-          builder: (context, Box<UserProfile> box, _) {
+      body: ValueListenableBuilder(
+        valueListenable: Hive.box<UserProfile>(
+          HiveService.profileBoxName,
+        ).listenable(),
+        builder: (context, Box<UserProfile> box, _) {
             if (box.values.isEmpty) {
               return _buildEmptyState(context, isDark);
             }
@@ -59,7 +47,6 @@ class ProfileScreen extends StatelessWidget {
             );
           },
         ),
-      ),
     );
   }
 

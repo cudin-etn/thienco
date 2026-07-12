@@ -40,25 +40,33 @@ class _MainLayoutState extends State<MainLayout> {
             decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
             child: SafeArea(
               bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 92),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,
-                  transitionBuilder: (child, animation) {
-                    final slide = Tween<Offset>(
-                      begin: const Offset(0.035, 0),
-                      end: Offset.zero,
-                    ).animate(animation);
-                    return FadeTransition(
-                      opacity: animation,
-                      child: SlideTransition(position: slide, child: child),
-                    );
-                  },
-                  child: KeyedSubtree(
-                    key: ValueKey(_currentIndex),
-                    child: _screens[_currentIndex],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 92),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        final slide = Tween<Offset>(
+                          begin: const Offset(0.035, 0),
+                          end: Offset.zero,
+                        ).animate(animation);
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(
+                            position: slide,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey(_currentIndex),
+                        child: _screens[_currentIndex],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -66,29 +74,33 @@ class _MainLayoutState extends State<MainLayout> {
           ),
           Positioned(
             bottom: 12,
-            left: 48,
-            right: 48,
-            child: Container(
-              height: 64,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1E293B)
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(32),
-                boxShadow: [
-                  BoxShadow(
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 480),
+                child: Container(
+                  height: 64,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  decoration: BoxDecoration(
                     color: isDark
-                        ? Colors.black.withValues(alpha: 0.3)
-                        : Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
+                        ? const Color(0xFF1E293B)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.18)
+                            : Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                   Expanded(
                     child: _buildNavItem(
                       index: 0,
@@ -134,12 +146,14 @@ class _MainLayoutState extends State<MainLayout> {
                       isDark: isDark,
                     ),
                   ),
-                ],
-              ),
+                  ],
+                ),
             ),
           ),
-        ],
+        ),
       ),
+      ],
+    ),
     );
   }
 

@@ -80,10 +80,8 @@ class _CanChiScreenState extends State<CanChiScreen> {
       key: _scaffoldKey,
       endDrawer: const SettingsDrawer(),
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(gradient: AppColors.appBackground(isDark)),
-        child: SafeArea(
-          child: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +211,6 @@ class _CanChiScreenState extends State<CanChiScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 
